@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница не найдена | Ошибка 404</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            z-index: 2;
+        }
+        
+        .error-code {
+            font-size: 10rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(252, 0, 255, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .error-code::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border-radius: 8px;
+            opacity: 0.5;
+            filter: blur(5px);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        
+        .error-description {
+            font-size: 1.2rem;
+            color: #a0a0c0;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .possible-reasons {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .possible-reasons h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .possible-reasons h2::before {
+            content: '⚠';
+            margin-right: 10px;
+            font-size: 1.5rem;
+            color: #fc00ff;
+        }
+        
+        .reasons-list {
+            list-style-type: none;
+        }
+        
+        .reasons-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .reasons-list li::before {
+            content: '•';
+            color: #00dbde;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+        
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .action-button {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border-left: 4px solid #00dbde;
+            min-width: 200px;
+        }
+        
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+        
+        .action-button:hover::before {
+            left: 100%;
+        }
+        
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-button.secondary {
+            border-left: 4px solid #fc00ff;
+        }
+        
+        .glow-effect {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 219, 222, 0.2) 0%, transparent 70%);
+            filter: blur(30px);
+            z-index: 1;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .glow-effect:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            background: radial-gradient(circle, rgba(252, 0, 255, 0.15) 0%, transparent 70%);
+        }
+        
+        .glow-effect:nth-child(2) {
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+        
+        .glow-effect:nth-child(3) {
+            top: 50%;
+            left: 20%;
+            animation-delay: 10s;
+            background: radial-gradient(circle, rgba(0, 219, 222, 0.1) 0%, transparent 70%);
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(20px, 20px) scale(1.1);
+            }
+            50% {
+                transform: translate(-15px, 15px) scale(0.9);
+            }
+            75% {
+                transform: translate(-10px, -10px) scale(1.05);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .error-description {
+                font-size: 1rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-effect"></div>
+    <div class="glow-effect"></div>
+    <div class="glow-effect"></div>
+    
+    <div class="container">
+        <div class="error-code pulse">404</div>
+        
+        <h1>Страница не найдена</h1>
+        
+        <p class="error-description">
+            Страница пока не реализована, либо вы ввели адрес вручную, либо она была перемещена.
+        </p>
+        
+        <div class="possible-reasons">
+            <h2>Возможные причины:</h2>
+            <ul class="reasons-list">
+                <li>Страница находится в разработке</li>
+                <li>Вы ввели неправильный URL-адрес</li>
+                <li>Страница была перемещена или удалена</li>
+                <li>Временные технические неполадки</li>
+            </ul>
+        </div>
+        
+        <div class="actions">
+            <a href="index.html" class="action-button">
+                <span>Вернуться на главную</span>
+            </a>
+            <a href="javascript:history.back()" class="action-button secondary">
+                <span>Вернуться назад</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            const colors = ['#00dbde', '#fc00ff', '#ffffff'];
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.width = Math.random() * 5 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.borderRadius = '50%';
+                particle.style.zIndex = '1';
+                particle.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                
+                document.body.appendChild(particle);
+                
+                animateParticle(particle);
+            }
+            
+            function animateParticle(particle) {
+                let x = parseFloat(particle.style.left);
+                let y = parseFloat(particle.style.top);
+                let dx = (Math.random() - 0.5) * 0.5;
+                let dy = (Math.random() - 0.5) * 0.5;
+                
+                function move() {
+                    x += dx;
+                    y += dy;
+                    
+                    // Отскок от границ экрана
+                    if (x <= 0 || x >= 100) dx = -dx;
+                    if (y <= 0 || y >= 100) dy = -dy;
+                    
+                    particle.style.left = x + 'vw';
+                    particle.style.top = y + 'vh';
+                    
+                    requestAnimationFrame(move);
+                }
+                
+                move();
+            }
+        });
+    </script>
+</body>
+</html>
