@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Селектор страниц | Будущее</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border-radius: 3px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0c0;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .branches-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        
+        .branch {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .branch::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+        }
+        
+        .branch:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        
+        .branch-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .branch-title::before {
+            content: '⊞';
+            margin-right: 10px;
+            font-size: 1.5rem;
+            color: #00dbde;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        
+        .branch-button {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            padding: 1.2rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .branch-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+        
+        .branch-button:hover::before {
+            left: 100%;
+        }
+        
+        .branch-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .branch-button.registered {
+            border-left: 4px solid #00dbde;
+        }
+        
+        .branch-button.not-registered {
+            border-left: 4px solid #fc00ff;
+        }
+        
+        .branch-button .arrow {
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .branch-button:hover .arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+        
+        .glow-effect {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 219, 222, 0.2) 0%, transparent 70%);
+            filter: blur(30px);
+            z-index: -1;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .glow-effect:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            background: radial-gradient(circle, rgba(252, 0, 255, 0.15) 0%, transparent 70%);
+        }
+        
+        .glow-effect:nth-child(2) {
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(20px, 20px) scale(1.1);
+            }
+            50% {
+                transform: translate(-15px, 15px) scale(0.9);
+            }
+            75% {
+                transform: translate(-10px, -10px) scale(1.05);
+            }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: #a0a0c0;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .branches-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-effect"></div>
+    <div class="glow-effect"></div>
+    
+    <div class="container">
+        <header>
+            <h1>Селектор страниц</h1>
+            <p class="subtitle">Выберите режим просмотра: для зарегистрированных или незарегистрированных пользователей.</p>
+        </header>
+        
+        <div class="branches-container">
+            <!-- Главная страница ветка -->
+            <div class="branch">
+                <h2 class="branch-title">Главная страница</h2>
+                <div class="buttons-container">
+                    <a href="registered/index.html" class="branch-button registered">
+                        <span>Зарегистрированный пользователь</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="not_registered/index.html" class="branch-button not-registered">
+                        <span>Незарегистрированный пользователь</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Система веток для удобной навигации между разделами сайта</p>
+        </footer>
+    </div>
+</body>
+</html>
