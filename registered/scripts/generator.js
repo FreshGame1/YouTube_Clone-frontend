@@ -72,6 +72,62 @@ const shortTitles = [
     "Meditation for Beginners 🧘‍♀️", "DIY Home Decor Ideas 🏠", "Game Montage 🎯"
 ];
 
+const userAccounts = [
+    {
+        name: "FreshGame",
+        handle: "@FreshGame_YT",
+        avatar: null
+    },
+    {
+        name: "Gaming Pro",
+        handle: "@gamingpro",
+        avatar: null
+    },
+    {
+        name: "Music Lover",
+        handle: "@musiclover",
+        avatar: null
+    },
+    {
+        name: "Travel Explorer",
+        handle: "@travelexplorer",
+        avatar: null
+    }
+];
+
+const notifications = [
+    {
+        channel: "Music Matrix",
+        text: "uploaded a new video: Music Production Secrets Revealed",
+        time: "2 hours ago",
+        avatar: null,
+        thumbnail: null
+    },
+    {
+        channel: "Game Galaxy",
+        text: "is live: Playing New Release - Join now!",
+        time: "4 hours ago",
+        avatar: null,
+        thumbnail: null
+    },
+    {
+        channel: "Culinary Masters",
+        text: "uploaded: 5 Minute Recipes for Busy People",
+        time: "1 day ago",
+        avatar: null,
+        thumbnail: null
+    },
+    {
+        channel: "Travel Chronicles",
+        text: "added a new short: Beautiful Sunset in Greece",
+        time: "2 days ago",
+        avatar: null,
+        thumbnail: null
+    }
+];
+
+let notificationCount = 3;
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -202,9 +258,15 @@ function generateThumbnail(width, height, text) {
 
 function generateUserAvatar() {
     const userAvatar = document.querySelector('.user-avatar');
+    const userMenuAvatar = document.getElementById('user-menu-avatar');
+    
     if (userAvatar) {
-        const avatarUrl = generateAvatar(32, 'Guest User');
+        const avatarUrl = generateAvatar(32, 'FreshGame');
         userAvatar.innerHTML = `<img src="${avatarUrl}" alt="User avatar" style="width: 100%; height: 100%; border-radius: 50%;">`;
+        
+        if (userMenuAvatar) {
+            userMenuAvatar.src = avatarUrl;
+        }
     }
 }
 
@@ -308,8 +370,176 @@ function generateAvatar(size, channelName) {
     return canvas.toDataURL();
 }
 
+function updateNotificationBadge() {
+    const notificationBadges = document.querySelectorAll('.notification-badge');
+    
+    notificationBadges.forEach(badge => {
+        if (notificationCount > 0) {
+            badge.textContent = notificationCount > 99 ? '99+' : notificationCount.toString();
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    });
+}
+
+function generateRandomNotificationCount() {
+    const random = Math.random();
+    
+    if (random < 0.7) {
+        notificationCount = getRandomInt(1, 9);
+    } else if (random < 0.9) {
+        notificationCount = getRandomInt(10, 20);
+    } else {
+        notificationCount = 0;
+    }
+    
+    updateNotificationBadge();
+}
+
+function generateUserAccounts() {
+    const accountsList = document.getElementById('other-accounts');
+    const currentAccountAvatar = document.getElementById('current-account-avatar');
+    const currentAccountName = document.getElementById('current-account-name');
+    const currentAccountHandle = document.getElementById('current-account-handle');
+    
+    if (!accountsList) return;
+    
+    accountsList.innerHTML = '';
+    
+    if (userAccounts.length > 0 && !userAccounts[0].avatar) {
+        userAccounts[0].avatar = generateAvatar(32, userAccounts[0].name);
+    }
+    
+    if (currentAccountAvatar && userAccounts.length > 0) {
+        currentAccountAvatar.src = userAccounts[0].avatar;
+        currentAccountName.textContent = userAccounts[0].name;
+        currentAccountHandle.textContent = userAccounts[0].handle;
+    }
+    
+    userAccounts.slice(1).forEach(account => {
+        if (!account.avatar) {
+            account.avatar = generateAvatar(32, account.name);
+        }
+        
+        const accountItem = document.createElement('div');
+        accountItem.className = 'other-account-item';
+        accountItem.innerHTML = `
+            <div class="other-account-avatar">
+                <img src="${account.avatar}" alt="${account.name} avatar">
+            </div>
+            <div class="other-account-details">
+                <div class="other-account-name">${account.name}</div>
+                <div class="other-account-handle">${account.handle}</div>
+            </div>
+        `;
+        
+        accountItem.addEventListener('click', () => {
+            currentAccountAvatar.src = account.avatar;
+            currentAccountName.textContent = account.name;
+            currentAccountHandle.textContent = account.handle;
+            
+            const userMenuAvatar = document.getElementById('user-menu-avatar');
+            const userMenuName = document.getElementById('user-menu-name');
+            const userMenuHandle = document.getElementById('user-menu-handle');
+            
+            if (userMenuAvatar) userMenuAvatar.src = account.avatar;
+            if (userMenuName) userMenuName.textContent = account.name;
+            if (userMenuHandle) userMenuHandle.textContent = account.handle;
+            
+            const headerAvatar = document.querySelector('.user-avatar img');
+            if (headerAvatar) headerAvatar.src = account.avatar;
+            
+            const accountSwitchMenu = document.getElementById('account-switch-menu');
+            const userMenu = document.getElementById('user-menu');
+            
+            accountSwitchMenu.classList.remove('active');
+            userMenu.classList.add('active');
+            
+            generateRandomNotificationCount();
+            generateNotifications();
+        });
+        
+        accountsList.appendChild(accountItem);
+    });
+}
+
+function generateNotifications() {
+    const notificationsContent = document.getElementById('notifications-content');
+    if (!notificationsContent) return;
+    
+    notificationsContent.innerHTML = '';
+    
+    if (notificationCount === 0) {
+        notificationsContent.innerHTML = `
+            <div class="no-notifications">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 17H20L18.5951 15.5951C18.2141 15.2141 18 14.6973 18 14.1585V11C18 8.38757 16.3304 6.16509 14 5.34142V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V5.34142C7.66962 6.16509 6 8.38757 6 11V14.1585C6 14.6973 5.78595 15.2141 5.40493 15.5951L4 17H9M15 17V18C15 19.6569 13.6569 21 12 21C10.3431 21 9 19.6569 9 18V17M15 17H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>No notifications yet</p>
+                <p style="font-size: 12px; margin-top: 8px;">Check back later for new notifications</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const notificationsToShow = Math.min(notificationCount, 10);
+    
+    for (let i = 0; i < notificationsToShow; i++) {
+        const channel = getRandomChannelName();
+        const channelName = channel.name;
+        
+        const notificationTypes = [
+            `uploaded a new video: ${getRandomVideoTitle(channel.category)}`,
+            `is live: ${getRandomVideoTitle(channel.category)} - Join now!`,
+            `added a new short: ${shortTitles[getRandomInt(0, shortTitles.length - 1)]}`,
+            `liked your comment on: ${getRandomVideoTitle(channel.category)}`,
+            `mentioned you in a comment`
+        ];
+        
+        const notificationText = notificationTypes[getRandomInt(0, notificationTypes.length - 1)];
+        
+        const timeOptions = [
+            "just now",
+            "5 minutes ago", 
+            "15 minutes ago",
+            "1 hour ago",
+            "2 hours ago",
+            "4 hours ago",
+            "1 day ago",
+            "2 days ago"
+        ];
+        
+        const notificationTime = timeOptions[getRandomInt(0, timeOptions.length - 1)];
+        const avatarUrl = generateAvatar(40, channelName);
+        const thumbnailUrl = generateThumbnail(60, 34, '');
+        
+        const notificationItem = document.createElement('div');
+        notificationItem.className = 'notification-item';
+        notificationItem.innerHTML = `
+            <div class="notification-avatar">
+                <img src="${avatarUrl}" alt="${channelName} avatar">
+            </div>
+            <div class="notification-content">
+                <div class="notification-text">
+                    <span class="notification-channel">${channelName}</span>
+                    ${notificationText}
+                </div>
+                <div class="notification-time">${notificationTime}</div>
+            </div>
+            <div class="notification-thumbnail">
+                <img src="${thumbnailUrl}" alt="Video thumbnail">
+            </div>
+        `;
+        
+        notificationsContent.appendChild(notificationItem);
+    }
+}
+
 function generateSubscriptions() {
     const subscriptionsContainer = document.getElementById('subscriptions-container');
+    if (!subscriptionsContainer) return;
+    
     subscriptionsContainer.innerHTML = '';
     
     const allChannels = [
@@ -324,19 +554,20 @@ function generateSubscriptions() {
         [allChannels[i], allChannels[j]] = [allChannels[j], allChannels[i]];
     }
     
-    const selectedChannels = allChannels.slice(0, 40);
+    const selectedChannels = allChannels.slice(0, 100);
 
     selectedChannels.forEach(channel => {
-        const channelItem = document.createElement('div');
-        channelItem.className = 'channel-item';
+        const channelItem = document.createElement('a');
+        channelItem.className = 'sidebar-item';
+        channelItem.href = '#';
         
-        const avatarUrl = generateAvatar(40, channel.name);
+        const avatarUrl = generateAvatar(24, channel.name);
         
         channelItem.innerHTML = `
-            <div class="channel-avatar">
-                <img src="${avatarUrl}" alt="${channel.name} avatar">
-            </div>
-            <span class="subscription-name">${channel.name}</span>
+            <span class="sidebar-item-icon">
+                <img src="${avatarUrl}" alt="${channel.name} avatar" style="width: 24px; height: 24px; border-radius: 50%;">
+            </span>
+            <span>${channel.name}</span>
         `;
         
         subscriptionsContainer.appendChild(channelItem);
@@ -345,6 +576,8 @@ function generateSubscriptions() {
 
 function generateVideos() {
     const videosContainer = document.getElementById('videos-container');
+    if (!videosContainer) return;
+    
     videosContainer.innerHTML = '';
     
     for (let i = 0; i < 12; i++) {
@@ -385,6 +618,7 @@ function generateVideos() {
 
 function generateShorts() {
     const videosContainer = document.getElementById('videos-container');
+    if (!videosContainer) return;
     
     const shortsSection = document.createElement('div');
     shortsSection.className = 'shorts-section';
@@ -398,13 +632,13 @@ function generateShorts() {
             <span>Shorts</span>
         </div>
         <div class="shorts-scroll-container">
-            <button class="scroll-button scroll-button-left" aria-label="Прокрутить влево">
+            <button class="scroll-button scroll-button-left" aria-label="Scroll left">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
             <div class="shorts-container" id="shorts-container"></div>
-            <button class="scroll-button scroll-button-right" aria-label="Прокрутить вправо">
+            <button class="scroll-button scroll-button-right" aria-label="Scroll right">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -460,9 +694,162 @@ function generateShorts() {
     checkScrollButtons();
 }
 
+function addTestNotification() {
+    notificationCount += 1;
+    updateNotificationBadge();
+    generateNotifications();
+}
+
+function addTestChannel() {
+    const channel = getRandomChannelName();
+    const channelName = channel.name;
+    const avatarUrl = generateAvatar(24, channelName);
+    
+    const subscriptionsContainer = document.getElementById('subscriptions-container');
+    if (subscriptionsContainer) {
+        const channelItem = document.createElement('a');
+        channelItem.className = 'sidebar-item';
+        channelItem.href = '#';
+        channelItem.innerHTML = `
+            <span class="sidebar-item-icon">
+                <img src="${avatarUrl}" alt="${channelName} avatar" style="width: 24px; height: 24px; border-radius: 50%;">
+            </span>
+            <span>${channelName}</span>
+        `;
+        subscriptionsContainer.appendChild(channelItem);
+    }
+}
+
+function addTestVideo() {
+    const channel = getRandomChannelName();
+    const channelName = channel.name;
+    const videoTitle = getRandomVideoTitle(channel.category);
+    const views = formatViews(getRandomInt(10000, 5000000));
+    const timeAgo = getTimeAgo();
+    const duration = generateDuration();
+    
+    const thumbnailDataUrl = generateThumbnail(300, 169, 'New Video');
+    const avatarUrl = generateAvatar(40, channelName);
+    
+    const videosContainer = document.getElementById('videos-container');
+    if (videosContainer) {
+        const videoCard = document.createElement('div');
+        videoCard.className = 'video-card';
+        videoCard.innerHTML = `
+            <div class="thumbnail-container">
+                <img src="${thumbnailDataUrl}" alt="Video thumbnail" class="thumbnail">
+                <div class="video-duration">${duration}</div>
+            </div>
+            <div class="video-info">
+                <div class="channel-avatar-md">
+                    <img src="${avatarUrl}" alt="${channelName} avatar">
+                </div>
+                <div class="video-details">
+                    <h3 class="video-title">${videoTitle}</h3>
+                    <p class="channel-name">${channelName}</p>
+                    <p class="video-metadata">${views} views<span class="dot-separator">•</span> ${timeAgo}</p>
+                </div>
+            </div>
+        `;
+        videosContainer.appendChild(videoCard);
+    }
+}
+
+function addTestShort() {
+    const titleIndex = getRandomInt(0, shortTitles.length - 1);
+    const shortTitle = shortTitles[titleIndex];
+    const views = formatViews(getRandomInt(100000, 10000000));
+    const shortThumbnail = generateThumbnail(170, 300, 'New Short');
+    
+    const shortsContainer = document.getElementById('shorts-container');
+    if (shortsContainer) {
+        const shortCard = document.createElement('div');
+        shortCard.className = 'short-card';
+        shortCard.innerHTML = `
+            <div class="short-thumbnail">
+                <img src="${shortThumbnail}" alt="Short thumbnail">
+            </div>
+            <h3 class="short-title">${shortTitle}</h3>
+            <p class="short-views">${views} views</p>
+        `;
+        shortsContainer.appendChild(shortCard);
+    }
+}
+
+function createTestPanel() {
+    const testPanel = document.createElement('div');
+    testPanel.id = 'test-panel';
+    testPanel.style.cssText = `
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        border: 2px solid #ff0000;
+        border-radius: 10px;
+        padding: 15px;
+        z-index: 10000;
+        color: white;
+        font-family: Arial, sans-serif;
+        min-width: 200px;
+        backdrop-filter: blur(10px);
+    `;
+    
+    testPanel.innerHTML = `
+        <div style="margin-bottom: 15px; font-weight: bold; text-align: center; border-bottom: 1px solid #ff0000; padding-bottom: 8px;">
+            🛠️ Test Panel
+        </div>
+        <button id="test-notification" style="width: 100%; padding: 8px; margin: 5px 0; background: #ff0000; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Add Notification
+        </button>
+        <button id="test-channel" style="width: 100%; padding: 8px; margin: 5px 0; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Add Channel
+        </button>
+        <button id="test-video" style="width: 100%; padding: 8px; margin: 5px 0; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Add Video
+        </button>
+        <button id="test-short" style="width: 100%; padding: 8px; margin: 5px 0; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Add Short
+        </button>
+        <button id="test-close" style="width: 100%; padding: 8px; margin: 5px 0; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Close Panel
+        </button>
+    `;
+    
+    document.body.appendChild(testPanel);
+    
+    document.getElementById('test-notification').addEventListener('click', addTestNotification);
+    document.getElementById('test-channel').addEventListener('click', addTestChannel);
+    document.getElementById('test-video').addEventListener('click', addTestVideo);
+    document.getElementById('test-short').addEventListener('click', addTestShort);
+    document.getElementById('test-close').addEventListener('click', () => {
+        testPanel.remove();
+    });
+}
+
+function toggleTestPanel() {
+    const existingPanel = document.getElementById('test-panel');
+    if (existingPanel) {
+        existingPanel.remove();
+    } else {
+        createTestPanel();
+    }
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F9') {
+        e.preventDefault();
+        toggleTestPanel();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     generateSubscriptions();
     generateVideos();
     generateShorts();
     generateUserAvatar();
+    generateUserAccounts();
+    
+    generateRandomNotificationCount();
+    generateNotifications();
 });
