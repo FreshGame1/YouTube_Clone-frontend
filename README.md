@@ -1,3 +1,3 @@
 # YouTube Copy
 
-An attempt to copy YouTube to the smallest detail
+An attempt to copy YouTube, but with minor changes
